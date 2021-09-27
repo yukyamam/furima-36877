@@ -9,9 +9,11 @@
     <div class="item-img-content">
       <%= image_tag @item.image ,class:"item-box-img" %>
       <%# 商品購入機能実装後、商品が売れている場合は、sold outを表示しましょう %>
-      <%# <div class="sold-out">
+      <% if @item.order %>
+      <div class="sold-out">
         <span>Sold Out!!</span>
-      </div> %>
+      </div>
+      <% end %>
       <%# //商品購入機能実装後、商品が売れている場合は、sold outを表示しましょう %>
     </div>
     <div class="item-price-box">
@@ -23,21 +25,18 @@
       </span>
     </div>
 
-    <%# ログインしているユーザーと出品しているユーザーが、同一人物の場合と同一人物ではない場合で、処理を分けましょう・外側のifに、商品購入機能実装後、「且つ 商品が出品中である」の条件を足す %>
-    <% if user_signed_in? %>
+    <% if user_signed_in? && @item.order == nil %>
       <% if current_user.id == @item.user_id %>
         <%= link_to "商品の編集", edit_item_path(@item.id), method: :get, class: "item-red-btn" %>
         <p class="or-text">or</p>
         <%= link_to "削除", item_path(@item.id), method: :delete, class:"item-destroy" %>
       <% end %>
-    <%# 商品購入機能実装後、商品が売れていない場合はこちらを表示しましょう %>
+    <%# 商品が売れていない場合 %>
       <% if current_user.id != @item.user_id %>
         <%= link_to "購入画面に進む", item_orders_path(@item.id), method: :get, class:"item-red-btn" %>
       <% end %>
-    <%# //商品購入機能実装後、商品が売れていない場合はこちらを表示しましょう %>
+    <%# 商品が売れていない場合 %>
     <% end %>
-
-    <%# //ログインしているユーザーと出品しているユーザーが、同一人物の場合と同一人物ではない場合で、処理を分けましょう・外側のifに、商品購入機能実装後、「且つ 商品が出品中である」の条件を足す %>
 
     <div class="item-explain-box">
       <span><%= @item.description %></span>
